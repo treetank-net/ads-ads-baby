@@ -9,20 +9,16 @@
       "name": "google-ads-baby",
       "description": "Google Ads campaign management with two-phase safety confirmations. Read campaigns, adjust budgets, pause/enable — every mutation requires explicit user approval.",
       "source": {
-        "source": "github",
-        "repo": "treetank-net/google-ads-baby",
-        "commit": "b366ef85a08ff3fa5d067474a96d3b533e8e9422",
-        "sha": "b366ef85a08ff3fa5d067474a96d3b533e8e9422"
+        "source": "url",
+        "url": "https://github.com/treetank-net/google-ads-baby.git"
       }
     },
     {
       "name": "meta-ads-baby",
       "description": "Meta (Facebook) Ads campaign management with two-phase safety confirmations. Create campaigns, upload creatives, manage audiences — every mutation requires explicit user approval.",
       "source": {
-        "source": "github",
-        "repo": "treetank-net/meta-ads-baby",
-        "commit": "05b19b3356a2d20a044b5c3f3f3844af88a896d8",
-        "sha": "05b19b3356a2d20a044b5c3f3f3844af88a896d8"
+        "source": "url",
+        "url": "https://github.com/treetank-net/meta-ads-baby.git"
       }
     }
   ]
