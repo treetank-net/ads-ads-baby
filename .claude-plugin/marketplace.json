@@ -1,28 +1,23 @@
 {
   "name": "ads-ads-baby-marketplace",
-  "interface": {
-    "displayName": "Ads Ads Baby"
+  "metadata": {
+    "description": "Google Ads & Meta Ads campaign management plugins by Treetank."
+  },
+  "owner": {
+    "name": "treetank"
   },
   "plugins": [
     {
+      "description": "Google Ads campaign management with two-phase safety confirmations. Read campaigns, adjust budgets, pause/enable — every mutation requires explicit user approval.",
       "name": "google-ads-baby",
-      "description": "Google Ads campaign management with two-phase safety confirmations.",
-      "category": "Productivity",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/treetank-net/google-ads-baby.git"
-      },
-      "homepage": "https://github.com/treetank-net/google-ads-baby"
+      "source": "https://github.com/treetank-net/google-ads-baby.git",
+      "version": "0.9.0"
     },
     {
+      "description": "Meta (Facebook) Ads campaign management with two-phase safety confirmations. Create campaigns, upload creatives, manage audiences — every mutation requires explicit user approval.",
       "name": "meta-ads-baby",
-      "description": "Meta (Facebook) Ads campaign management with two-phase safety confirmations.",
-      "category": "Productivity",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/treetank-net/meta-ads-baby.git"
-      },
-      "homepage": "https://github.com/treetank-net/meta-ads-baby"
+      "source": "https://github.com/treetank-net/meta-ads-baby.git",
+      "version": "0.9.0"
     }
   ]
 }
