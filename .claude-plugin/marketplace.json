@@ -1,0 +1,28 @@
+{
+  "name": "ads-ads-baby-marketplace",
+  "interface": {
+    "displayName": "Ads Ads Baby"
+  },
+  "plugins": [
+    {
+      "name": "google-ads-baby",
+      "description": "Google Ads campaign management with two-phase safety confirmations.",
+      "category": "Productivity",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/treetank-net/google-ads-baby.git"
+      },
+      "homepage": "https://github.com/treetank-net/google-ads-baby"
+    },
+    {
+      "name": "meta-ads-baby",
+      "description": "Meta (Facebook) Ads campaign management with two-phase safety confirmations.",
+      "category": "Productivity",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/treetank-net/meta-ads-baby.git"
+      },
+      "homepage": "https://github.com/treetank-net/meta-ads-baby"
+    }
+  ]
+}
