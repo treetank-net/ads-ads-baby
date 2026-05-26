@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "meta-ads": {
+      "command": "npx",
+      "args": ["-y", "--package", "@treetank/meta-ads-baby", "meta-ads-baby-mcp"],
+      "env": {
+        "META_ADS_ENABLE_MANUAL_CONFIRM": "0"
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "ads-ads-baby-marketplace",
+  "interface": {
+    "displayName": "Ads Ads Baby"
+  },
+  "plugins": [
+    {
+      "name": "google-ads-baby",
+      "source": {
+        "source": "local",
+        "path": "./plugins/google-ads-baby"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "meta-ads-baby",
+      "source": {
+        "source": "local",
+        "path": "./plugins/meta-ads-baby"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

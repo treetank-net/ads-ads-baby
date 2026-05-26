@@ -1,0 +1,27 @@
+{
+  "name": "meta-ads-baby",
+  "version": "0.1.0",
+  "description": "Meta (Facebook) Ads campaign management MCP server with two-phase safety confirmations.",
+  "author": {
+    "name": "Jacek Marianski",
+    "url": "https://treetank.net"
+  },
+  "license": "MIT",
+  "keywords": ["meta-ads", "facebook-ads", "mcp", "campaigns", "safety"],
+  "hooks": "./hooks.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Meta Ads Baby",
+    "shortDescription": "Manage Meta (Facebook) Ads campaigns through a safe local MCP server.",
+    "longDescription": "Meta (Facebook) Ads MCP server for listing accounts and campaigns, adjusting budgets, changing campaign status, and preparing new campaigns, ad sets, and ads with two-phase safety confirmation.",
+    "developerName": "Jacek Marianski",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": [
+      "Set up Meta Ads authentication.",
+      "List my ad accounts.",
+      "Show campaigns for a selected account."
+    ],
+    "brandColor": "#1877F2"
+  }
+}
