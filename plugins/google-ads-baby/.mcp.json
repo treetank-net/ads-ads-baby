@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "google-ads": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": ".",
+      "env": {
+        "GOOGLE_ADS_ENABLE_MANUAL_CONFIRM": "0"
+      }
+    }
+  }
+}

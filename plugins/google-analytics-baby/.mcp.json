@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "google-analytics": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": ".",
+      "env": {
+        "GA_BABY_DATA": "${GA_BABY_DATA:-}",
+        "GOOGLE_ANALYTICS_CLIENT_ID": "${GOOGLE_ANALYTICS_CLIENT_ID:-}",
+        "GOOGLE_ANALYTICS_CLIENT_SECRET": "${GOOGLE_ANALYTICS_CLIENT_SECRET:-}",
+        "GOOGLE_ANALYTICS_REFRESH_TOKEN": "${GOOGLE_ANALYTICS_REFRESH_TOKEN:-}"
+      }
+    }
+  }
+}

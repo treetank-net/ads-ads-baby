@@ -9,8 +9,12 @@
       "description": "Google Ads campaign management with two-phase safety confirmations.",
       "category": "Productivity",
       "source": {
-        "source": "url",
-        "url": "https://github.com/treetank-net/google-ads-baby.git"
+        "source": "local",
+        "path": "./plugins/google-ads-baby"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "homepage": "https://github.com/treetank-net/google-ads-baby"
     },
@@ -19,10 +23,28 @@
       "description": "Meta (Facebook) Ads campaign management with two-phase safety confirmations.",
       "category": "Productivity",
       "source": {
-        "source": "url",
-        "url": "https://github.com/treetank-net/meta-ads-baby.git"
+        "source": "local",
+        "path": "./plugins/meta-ads-baby"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "homepage": "https://github.com/treetank-net/meta-ads-baby"
+    },
+    {
+      "name": "google-analytics-baby",
+      "description": "Google Analytics 4 read-only marketing analytics for ads: campaign performance, tracking diagnostics, and GA4-based Google Ads cost/ROAS.",
+      "category": "Productivity",
+      "source": {
+        "source": "local",
+        "path": "./plugins/google-analytics-baby"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "homepage": "https://github.com/treetank-net/google-analytics-baby"
     }
   ]
 }

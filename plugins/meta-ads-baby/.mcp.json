@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "meta-ads": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": ".",
+      "env": {
+        "META_ADS_ENABLE_MANUAL_CONFIRM": "0"
+      }
+    }
+  }
+}

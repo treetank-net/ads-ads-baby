@@ -1,6 +1,6 @@
 # ads-ads-baby
 
-Marketplace hub for ads management Claude Code plugins with two-phase mutation safety.
+Marketplace hub for ads management and marketing analytics Claude Code and Codex plugins.
 
 ## Plugins
 
@@ -8,14 +8,21 @@ Marketplace hub for ads management Claude Code plugins with two-phase mutation s
 |--------|----------|------|
 | **Google Ads Baby** | Google Ads | [treetank-net/google-ads-baby](https://github.com/treetank-net/google-ads-baby) |
 | **Meta Ads Baby** | Meta (Facebook) Ads | [treetank-net/meta-ads-baby](https://github.com/treetank-net/meta-ads-baby) |
+| **Google Analytics Baby** | Google Analytics 4 | [treetank-net/google-analytics-baby](https://github.com/treetank-net/google-analytics-baby) |
 
 ## What is this?
 
-This repo is a Claude Code / Codex marketplace manifest that bundles both plugins for easy discovery and installation. Each plugin runs its own local MCP server with a two-phase mutation safety flow (prepare → user confirmation → execute).
+This repo contains host-specific marketplace manifests that bundle the ads family for easy discovery and installation. Each plugin runs its own local MCP server.
+
+Google Ads Baby and Meta Ads Baby use a two-phase mutation safety flow (prepare → user confirmation → execute). Google Analytics Baby is read-only and adds GA4-based campaign performance, tracking diagnostics, and Google Ads cost/ROAS context.
+
+Claude Code loads each upstream plugin with its native lifecycle hooks. Codex uses local wrappers from `plugins/` and the shared global hook configuration in `codex/hooks.json` for mutating ads plugins. The MCP servers enforce the final confirmation gate because Codex `PreToolUse` hooks do not intercept MCP tool calls.
+
+Current Codex builds do not load hooks from plugin cache (`plugin_hooks` was removed). Install `codex/hooks.json` as the Codex home `hooks.json`, then restart Codex. The hook commands are local and do not run `npx` or access the network on prompt submission.
 
 ## Safety
 
-All mutations require explicit user confirmation via a safe word mechanism enforced by hooks. The LLM cannot execute mutations without a real user message in between. This is especially critical for Meta Ads which has no test/sandbox mode.
+All mutations require explicit user confirmation via a safe word. Both hosts require a real user reply containing that word before `confirm_mutation` can execute. This is especially critical for Meta Ads which has no test/sandbox mode. Google Analytics Baby does not mutate accounts and does not participate in the safety hook flow.
 
 ## License
 

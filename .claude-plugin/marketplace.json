@@ -1,6 +1,6 @@
 {
   "name": "ads-ads-baby-marketplace",
-  "description": "Google Ads & Meta Ads campaign management plugins by Treetank.",
+  "description": "Ads management and marketing analytics plugins by Treetank.",
   "owner": {
     "name": "treetank"
   },
@@ -19,6 +19,14 @@
       "source": {
         "source": "url",
         "url": "https://github.com/treetank-net/meta-ads-baby.git"
+      }
+    },
+    {
+      "name": "google-analytics-baby",
+      "description": "Google Analytics 4 read-only marketing analytics for ads. List properties, audit tracking, run campaign performance reports, and pull Google Ads cost/ROAS from GA4.",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/treetank-net/google-analytics-baby.git"
       }
     }
   ]

@@ -1,0 +1,37 @@
+{
+  "name": "google-ads-baby",
+  "version": "0.1.1+codex.20260609115104",
+  "description": "Google Ads campaign management with two-phase safety confirmations.",
+  "author": {
+    "name": "treetank",
+    "url": "https://treetank.net"
+  },
+  "homepage": "https://github.com/treetank-net/google-ads-baby",
+  "repository": "https://github.com/treetank-net/google-ads-baby",
+  "license": "MIT",
+  "keywords": [
+    "google-ads",
+    "mcp",
+    "campaigns",
+    "safety"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Google Ads Baby",
+    "shortDescription": "Manage Google Ads campaigns with explicit confirmations.",
+    "longDescription": "Google Ads MCP server for reading accounts and campaigns and safely preparing and confirming campaign mutations.",
+    "developerName": "treetank",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Set up Google Ads authentication.",
+      "List my Google Ads accounts.",
+      "Show campaigns for a selected account."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

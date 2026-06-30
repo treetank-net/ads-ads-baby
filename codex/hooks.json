@@ -1,0 +1,23 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e 'const fs=require(\"fs\"),os=require(\"os\"),path=require(\"path\");try{const input=fs.readFileSync(0,\"utf8\"),dir=process.env.GOOGLE_ADS_BABY_DATA||path.join(os.homedir(),\".google-ads-baby\"),word=fs.readFileSync(path.join(dir,\".gads-safe-word\"),\"utf8\").trim(),prompt=String(JSON.parse(input).prompt||\"\");if(word&&new RegExp(`(^|[^A-Za-z0-9_-])${word}(?=$|[^A-Za-z0-9_-])`,\"i\").test(prompt)){fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,\".gads-confirm-state\"),`user-confirmed:${Math.floor(Date.now()/1000)}`)}}catch{}'",
+            "timeout": 5,
+            "statusMessage": "Checking Google Ads confirmation"
+          },
+          {
+            "type": "command",
+            "command": "node -e 'const fs=require(\"fs\"),os=require(\"os\"),path=require(\"path\");try{const input=fs.readFileSync(0,\"utf8\"),dir=process.env.META_ADS_BABY_DATA||path.join(os.homedir(),\".meta-ads-baby\"),word=fs.readFileSync(path.join(dir,\".mads-safe-word\"),\"utf8\").trim(),prompt=String(JSON.parse(input).prompt||\"\");if(word&&new RegExp(`(^|[^A-Za-z0-9_-])${word}(?=$|[^A-Za-z0-9_-])`,\"i\").test(prompt)){fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,\".mads-confirm-state\"),`user-confirmed:${Math.floor(Date.now()/1000)}`)}}catch{}'",
+            "timeout": 5,
+            "statusMessage": "Checking Meta Ads confirmation"
+          }
+        ]
+      }
+    ]
+  }
+}
