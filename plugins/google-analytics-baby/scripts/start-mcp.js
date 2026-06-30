@@ -9,7 +9,7 @@ const serverDir = join(dataDir, 'server');
 const bundle = join(serverDir, 'bundle.cjs');
 const pkgPath = join(dataDir, 'package.json');
 
-const REPO_RAW = 'https://raw.githubusercontent.com/treetank-net/google-analytics-baby/master';
+const REPO_RAW = 'https://raw.githubusercontent.com/treetank-net/google-analytics-baby/main';
 
 function localVersion() {
   try {
