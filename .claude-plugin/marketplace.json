@@ -28,6 +28,14 @@
         "source": "url",
         "url": "https://github.com/treetank-net/google-analytics-baby.git"
       }
+    },
+    {
+      "name": "report-baby",
+      "description": "Local report renderer for polished PDF/PNG deliverables from HTML, URLs, or built-in report templates.",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/treetank-net/report-baby.git"
+      }
     }
   ]
 }

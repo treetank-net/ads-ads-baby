@@ -45,6 +45,20 @@
         "authentication": "ON_INSTALL"
       },
       "homepage": "https://github.com/treetank-net/google-analytics-baby"
+    },
+    {
+      "name": "report-baby",
+      "description": "Local report renderer for polished PDF/PNG deliverables from HTML, URLs, or built-in report templates.",
+      "category": "Productivity",
+      "source": {
+        "source": "local",
+        "path": "./plugins/report-baby"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "homepage": "https://github.com/treetank-net/report-baby"
     }
   ]
 }
