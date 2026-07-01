@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "marketing-context": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": "."
+    }
+  }
+}

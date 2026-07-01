@@ -36,6 +36,14 @@
         "source": "url",
         "url": "https://github.com/treetank-net/report-baby.git"
       }
+    },
+    {
+      "name": "marketing-context-mcp",
+      "description": "Durable local marketing memory and client context for ads, analytics, reporting, and account decisions.",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/treetank-net/marketing-context-mcp.git"
+      }
     }
   ]
 }
