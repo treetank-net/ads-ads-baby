@@ -4,7 +4,10 @@ import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { spawn } from 'node:child_process';
 
-const dataDir = process.env.MARKETING_CONTEXT_MCP_DATA || join(homedir(), '.marketing-context-mcp');
+const pluginName = 'marketing-context-mcp';
+const dataDir = process.env.MARKETING_CONTEXT_MCP_DATA && !process.env.MARKETING_CONTEXT_MCP_DATA.includes('${')
+  ? process.env.MARKETING_CONTEXT_MCP_DATA
+  : join(homedir(), '.marketing-context-mcp');
 const serverDir = join(dataDir, 'server');
 const bundle = join(serverDir, 'bundle.cjs');
 const pkgPath = join(dataDir, 'package.json');
@@ -29,34 +32,125 @@ async function download(remotePath, localPath) {
 async function autoUpdate() {
   try {
     const res = await fetch(`${REPO_RAW}/package.json`);
-    if (!res.ok) return;
+    if (!res.ok) throw new Error(`HTTP ${res.status} checking package version`);
     const remote = await res.json();
     const missingBundle = !existsSync(bundle);
-    if (!missingBundle && (remote.version || '0.0.0') === localVersion()) return;
+    if (!missingBundle && (remote.version || '0.0.0') === localVersion()) return true;
 
-    process.stderr.write(`Updating marketing-context-mcp ${localVersion()} -> ${remote.version}...\n`);
+    process.stderr.write(`Updating ${pluginName} ${localVersion()} -> ${remote.version}...\n`);
 
     await download('bundle.cjs', bundle);
     await download('package.json', pkgPath);
 
     process.stderr.write(`Updated to ${remote.version}.\n`);
+    return true;
   } catch (error) {
-    process.stderr.write(`Could not update marketing-context-mcp: ${error.message}\n`);
+    process.stderr.write(`Could not update ${pluginName}: ${error.message}\n`);
+    return false;
   }
 }
 
-await autoUpdate();
-
-if (!existsSync(bundle)) {
-  process.stderr.write(`Missing MCP server bundle at ${bundle}.\n`);
-  process.exit(1);
+function startRealServer() {
+  const child = spawn('node', [bundle], {
+    cwd: serverDir,
+    env: { ...process.env, CLAUDE_PLUGIN_ROOT: dataDir },
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+  });
+  child.on('exit', (code) => process.exit(code ?? 1));
 }
 
-const child = spawn('node', [bundle], {
-  cwd: serverDir,
-  env: { ...process.env, CLAUDE_PLUGIN_ROOT: dataDir },
-  stdio: 'inherit',
-  shell: process.platform === 'win32',
-});
+let updatePromise = null;
 
-child.on('exit', (code) => process.exit(code ?? 1));
+function ensureUpdate() {
+  updatePromise ??= autoUpdate().finally(() => {
+    updatePromise = null;
+  });
+  return updatePromise;
+}
+
+function send(message) {
+  process.stdout.write(`${JSON.stringify(message)}\n`);
+}
+
+function result(id, value) {
+  send({ jsonrpc: '2.0', id, result: value });
+}
+
+function error(id, code, message) {
+  send({ jsonrpc: '2.0', id, error: { code, message } });
+}
+
+async function handleRequest(message) {
+  const { id, method, params } = message;
+  if (id === undefined || id === null) return;
+
+  if (method === 'initialize') {
+    result(id, {
+      protocolVersion: params?.protocolVersion || '2025-06-18',
+      capabilities: { tools: {} },
+      serverInfo: { name: `${pluginName}-bootstrap`, version: localVersion() },
+      instructions: `${pluginName} is downloading its runtime. Use update_plugin, then restart the MCP server or session to load the full toolset.`,
+    });
+    return;
+  }
+
+  if (method === 'tools/list') {
+    result(id, {
+      tools: [{
+        name: 'update_plugin',
+        description: `Download or repair the ${pluginName} runtime. Restart the MCP server/session after it completes.`,
+        inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      }],
+    });
+    return;
+  }
+
+  if (method === 'tools/call') {
+    if (params?.name !== 'update_plugin') {
+      error(id, -32601, `Unknown tool: ${params?.name || ''}`);
+      return;
+    }
+    await ensureUpdate();
+    const text = existsSync(bundle)
+      ? `Runtime downloaded to ${bundle}. Restart MCP/session to load the full ${pluginName} toolset.`
+      : `Runtime is still unavailable at ${bundle}. Check network access and call update_plugin again.`;
+    result(id, { content: [{ type: 'text', text }] });
+    return;
+  }
+
+  error(id, -32601, `Method not found: ${method}`);
+}
+
+function startBootstrapServer() {
+  process.stderr.write(`Missing MCP server bundle at ${bundle}; starting bootstrap MCP with update_plugin.\n`);
+  ensureUpdate().catch(() => {});
+  let buffer = '';
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', (chunk) => {
+    buffer += chunk;
+    for (;;) {
+      const index = buffer.indexOf('\n');
+      if (index === -1) break;
+      const line = buffer.slice(0, index).trim();
+      buffer = buffer.slice(index + 1);
+      if (!line) continue;
+      try {
+        handleRequest(JSON.parse(line)).catch((err) => {
+          process.stderr.write(`Bootstrap request failed: ${err.message}\n`);
+        });
+      } catch (err) {
+        process.stderr.write(`Invalid MCP message: ${err.message}\n`);
+      }
+    }
+  });
+  setInterval(() => {}, 60_000);
+}
+
+if (existsSync(bundle)) {
+  await autoUpdate();
+  if (existsSync(bundle)) startRealServer();
+  else startBootstrapServer();
+} else {
+  startBootstrapServer();
+}

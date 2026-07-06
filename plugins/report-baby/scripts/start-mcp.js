@@ -1,20 +1,18 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { homedir } from 'os';
 import { dirname, join } from 'path';
-import { spawn, spawnSync } from 'child_process';
+import { spawn } from 'child_process';
 
-const dataDir = process.env.REPORT_BABY_DATA || join(homedir(), '.report-baby');
+const pluginName = 'report-baby';
+const dataDir = process.env.REPORT_BABY_DATA && !process.env.REPORT_BABY_DATA.includes('${')
+  ? process.env.REPORT_BABY_DATA
+  : join(homedir(), '.report-baby');
 const serverDir = join(dataDir, 'server');
 const bundle = join(serverDir, 'bundle.cjs');
-const serverPkg = join(serverDir, 'package.json');
 const pkgPath = join(dataDir, 'package.json');
 
 const REPO_RAW = 'https://raw.githubusercontent.com/treetank-net/report-baby/main';
-
-function cleanEnv(value) {
-  return value && !value.includes('${') ? value : '';
-}
 
 function localVersion() {
   try {
@@ -37,80 +35,122 @@ async function autoUpdate() {
     if (!res.ok) throw new Error(`HTTP ${res.status} checking package version`);
     const remote = await res.json();
     const missingBundle = !existsSync(bundle);
-    if (!missingBundle && (remote.version || '0.0.0') === localVersion()) return;
+    if (!missingBundle && (remote.version || '0.0.0') === localVersion()) return true;
 
-    process.stderr.write(`Updating report-baby ${localVersion()} -> ${remote.version}...\n`);
+    process.stderr.write(`Updating ${pluginName} ${localVersion()} -> ${remote.version}...\n`);
 
     await download('server/bundle.cjs', bundle);
-    await download('server/package.json', serverPkg);
     await download('package.json', pkgPath);
 
     process.stderr.write(`Updated to ${remote.version}.\n`);
+    return true;
   } catch (error) {
-    process.stderr.write(`Could not update report-baby: ${error.message}\n`);
-  }
-}
-
-function ensureNodeModules() {
-  if (existsSync(join(serverDir, 'node_modules', 'playwright'))) return true;
-  process.stderr.write('Installing report-baby runtime dependencies...\n');
-  const result = spawnSync('npm', ['install', '--omit=dev'], {
-    cwd: serverDir,
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
-  });
-  return result.status === 0;
-}
-
-function chromiumChannel() {
-  return cleanEnv(process.env.REPORT_BABY_CHROMIUM_CHANNEL);
-}
-
-function chromiumInstalled() {
-  if (chromiumChannel()) return true;
-  try {
-    const base = process.platform === 'win32'
-      ? join(process.env.USERPROFILE || '', 'AppData', 'Local', 'ms-playwright')
-      : process.platform === 'darwin'
-        ? join(process.env.HOME || '', 'Library', 'Caches', 'ms-playwright')
-        : join(process.env.HOME || '', '.cache', 'ms-playwright');
-    if (!existsSync(base)) return false;
-    return readdirSync(base).some((d) => d.startsWith('chromium'));
-  } catch {
+    process.stderr.write(`Could not update ${pluginName}: ${error.message}\n`);
     return false;
   }
 }
 
-function ensureChromium() {
-  if (chromiumInstalled()) return true;
-  process.stderr.write('report-baby: Chromium for Playwright not found.\n');
-  process.stderr.write('Attempting: npx playwright install chromium ...\n');
-  const result = spawnSync('npx', ['playwright', 'install', 'chromium'], {
+function startRealServer() {
+  const child = spawn('node', [bundle], {
     cwd: serverDir,
+    env: { ...process.env, CLAUDE_PLUGIN_ROOT: dataDir },
     stdio: 'inherit',
     shell: process.platform === 'win32',
   });
-  if (result.status === 0) return true;
-  process.stderr.write('Automatic install failed. Run manually:\n  npx playwright install chromium\n');
-  process.stderr.write('Or set REPORT_BABY_CHROMIUM_CHANNEL=chrome to use a system Chrome install.\n');
-  return false;
+  child.on('exit', (code) => process.exit(code ?? 1));
 }
 
-await autoUpdate();
+let updatePromise = null;
 
-if (!existsSync(bundle)) {
-  process.stderr.write(`Missing MCP server bundle at ${bundle}.\n`);
-  process.exit(1);
+function ensureUpdate() {
+  updatePromise ??= autoUpdate().finally(() => {
+    updatePromise = null;
+  });
+  return updatePromise;
 }
 
-if (!ensureNodeModules()) process.exit(1);
-if (!ensureChromium()) process.exit(1);
+function send(message) {
+  process.stdout.write(`${JSON.stringify(message)}\n`);
+}
 
-const child = spawn('node', [bundle], {
-  cwd: serverDir,
-  env: { ...process.env, CLAUDE_PLUGIN_ROOT: dataDir },
-  stdio: 'inherit',
-  shell: process.platform === 'win32',
-});
+function result(id, value) {
+  send({ jsonrpc: '2.0', id, result: value });
+}
 
-child.on('exit', (code) => process.exit(code ?? 1));
+function error(id, code, message) {
+  send({ jsonrpc: '2.0', id, error: { code, message } });
+}
+
+async function handleRequest(message) {
+  const { id, method, params } = message;
+  if (id === undefined || id === null) return;
+
+  if (method === 'initialize') {
+    result(id, {
+      protocolVersion: params?.protocolVersion || '2025-06-18',
+      capabilities: { tools: {} },
+      serverInfo: { name: `${pluginName}-bootstrap`, version: localVersion() },
+      instructions: `${pluginName} is downloading its runtime. Use update_plugin, then restart the MCP server or session to load the full toolset.`,
+    });
+    return;
+  }
+
+  if (method === 'tools/list') {
+    result(id, {
+      tools: [{
+        name: 'update_plugin',
+        description: `Download or repair the ${pluginName} runtime. Restart the MCP server/session after it completes.`,
+        inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      }],
+    });
+    return;
+  }
+
+  if (method === 'tools/call') {
+    if (params?.name !== 'update_plugin') {
+      error(id, -32601, `Unknown tool: ${params?.name || ''}`);
+      return;
+    }
+    await ensureUpdate();
+    const text = existsSync(bundle)
+      ? `Runtime downloaded to ${bundle}. Restart MCP/session to load the full ${pluginName} toolset.`
+      : `Runtime is still unavailable at ${bundle}. Check network access and call update_plugin again.`;
+    result(id, { content: [{ type: 'text', text }] });
+    return;
+  }
+
+  error(id, -32601, `Method not found: ${method}`);
+}
+
+function startBootstrapServer() {
+  process.stderr.write(`Missing MCP server bundle at ${bundle}; starting bootstrap MCP with update_plugin.\n`);
+  ensureUpdate().catch(() => {});
+  let buffer = '';
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', (chunk) => {
+    buffer += chunk;
+    for (;;) {
+      const index = buffer.indexOf('\n');
+      if (index === -1) break;
+      const line = buffer.slice(0, index).trim();
+      buffer = buffer.slice(index + 1);
+      if (!line) continue;
+      try {
+        handleRequest(JSON.parse(line)).catch((err) => {
+          process.stderr.write(`Bootstrap request failed: ${err.message}\n`);
+        });
+      } catch (err) {
+        process.stderr.write(`Invalid MCP message: ${err.message}\n`);
+      }
+    }
+  });
+  setInterval(() => {}, 60_000);
+}
+
+if (existsSync(bundle)) {
+  await autoUpdate();
+  if (existsSync(bundle)) startRealServer();
+  else startBootstrapServer();
+} else {
+  startBootstrapServer();
+}
