@@ -1,0 +1,29 @@
+{
+  "name": "meta-ads-baby",
+  "version": "0.1.1+codex.20260609115104",
+  "description": "Meta Ads campaign management with two-phase safety confirmations.",
+  "author": {
+    "name": "treetank",
+    "url": "https://treetank.net"
+  },
+  "homepage": "https://github.com/treetank-net/meta-ads-baby",
+  "repository": "https://github.com/treetank-net/meta-ads-baby",
+  "license": "MIT",
+  "keywords": ["meta-ads", "facebook-ads", "mcp", "campaigns", "safety"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Meta Ads Baby",
+    "shortDescription": "Manage Meta Ads campaigns with explicit confirmations.",
+    "longDescription": "Meta Ads MCP server for reading accounts and campaigns and safely preparing and confirming campaign mutations.",
+    "developerName": "treetank",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": [
+      "Set up Meta Ads authentication.",
+      "List my Meta ad accounts.",
+      "Show campaigns for a selected account."
+    ],
+    "brandColor": "#1877F2"
+  }
+}
