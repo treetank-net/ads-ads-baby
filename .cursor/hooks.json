@@ -1,0 +1,32 @@
+{
+  "hooks": {
+    "beforeSubmitPrompt": [
+      {
+        "type": "command",
+        "command": "node /home/jm/projects/personal/ads-ads-baby/cursor/ads-safety-hook.cjs user-submit",
+        "timeout": 5000,
+        "failClosed": false
+      }
+    ],
+    "beforeMCPExecution": [
+      {
+        "type": "command",
+        "command": "node /home/jm/projects/personal/ads-ads-baby/cursor/ads-safety-hook.cjs pre-tool",
+        "timeout": 5000,
+        "failClosed": true,
+        "matcher": {
+          "server": "google-ads"
+        }
+      },
+      {
+        "type": "command",
+        "command": "node /home/jm/projects/personal/ads-ads-baby/cursor/ads-safety-hook.cjs pre-tool",
+        "timeout": 5000,
+        "failClosed": true,
+        "matcher": {
+          "server": "meta-ads"
+        }
+      }
+    ]
+  }
+}

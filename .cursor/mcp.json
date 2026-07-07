@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "google-ads": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": "/home/jm/projects/personal/ads-ads-baby/plugins/google-ads-baby",
+      "env": {
+        "GOOGLE_ADS_ENABLE_MANUAL_CONFIRM": "0"
+      }
+    },
+    "meta-ads": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": "/home/jm/projects/personal/ads-ads-baby/plugins/meta-ads-baby",
+      "env": {
+        "META_ADS_ENABLE_MANUAL_CONFIRM": "0"
+      }
+    },
+    "google-analytics": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": "/home/jm/projects/personal/ads-ads-baby/plugins/google-analytics-baby"
+    },
+    "report": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": "/home/jm/projects/personal/ads-ads-baby/plugins/report-baby"
+    },
+    "marketing-context": {
+      "command": "node",
+      "args": ["scripts/start-mcp.js"],
+      "cwd": "/home/jm/projects/personal/ads-ads-baby/plugins/marketing-context-mcp"
+    }
+  }
+}
