@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "google-ads-baby",
-      "description": "Google Ads campaign management with two-phase safety confirmations.",
+      "description": "Google Ads campaign management with two-phase safety confirmations: build complete Search/Display/Performance Max campaigns, manage keywords, ads, budgets, targeting, ad schedules, conversion goals and assets, plus read-only account analysis (hygiene report, budget scaling, search-terms waste, PMax breakdown). Every mutation requires explicit user approval.",
       "category": "Productivity",
       "source": {
         "source": "local",
@@ -62,7 +62,7 @@
     },
     {
       "name": "marketing-context-mcp",
-      "description": "Durable local marketing memory and client context for ads, analytics, reporting, and account decisions.",
+      "description": "Durable local marketing memory: client context, decisions, reviews, and operational tasks, layered on top of a bundled marketing knowledge library that stays current with the plugin. Configurable via update_config; self-diagnosing via get_context_health.",
       "category": "Productivity",
       "source": {
         "source": "local",

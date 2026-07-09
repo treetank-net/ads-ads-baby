@@ -22,6 +22,16 @@ Claude Code loads each upstream plugin with its native lifecycle hooks. Codex us
 
 The MCP servers enforce the final confirmation gate because not every host intercepts MCP tool calls in the same way. Marketing Context MCP is platform-neutral and does not participate in account mutation safety gates.
 
+## How the plugins work together
+
+The intended review-to-report pipeline:
+
+1. **Diagnose** — Google Ads Baby's read-only analysis tools (`get_account_hygiene_report`, `get_budget_scaling_candidates`, `get_search_terms_waste_candidates`, `get_pmax_channel_breakdown`) scan an account and return findings with severity, ready-to-run `prepare_*` actions, and a suggested follow-up task.
+2. **Remember** — findings, decisions, and follow-up tasks land in Marketing Context (`append_task`, `append_review`, `append_decision`), grounded in its knowledge library (workflow articles set the thresholds the analysis tools mirror). Per-client observations (audience CPA patterns, dayparting insights, quality-score issues) belong there too.
+3. **Act** — the `prepare_*` → safe word → confirm flow executes approved changes; every mutation is logged to the local audit history and can be recorded back into the client's decision log.
+4. **Measure** — Google Analytics Baby pulls GA4-side campaign performance and Google Ads cost/ROAS for the linked accounts.
+5. **Report** — Report Baby renders the results into client-facing PDF/PNG deliverables (`render_report`, `render_chart`, `render_metric_cards`).
+
 Current Codex builds do not load hooks from plugin cache (`plugin_hooks` was removed). Install `codex/hooks.json` as the Codex home `hooks.json`, then restart Codex. The hook commands are local and do not run `npx` or access the network on prompt submission.
 
 ## Cursor
