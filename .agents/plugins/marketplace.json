@@ -34,7 +34,7 @@
     },
     {
       "name": "google-analytics-baby",
-      "description": "Google Analytics 4 read-only marketing analytics for ads: campaign performance, tracking diagnostics, and GA4-based Google Ads cost/ROAS.",
+      "description": "Google Analytics 4 + Google Search Console read-only analytics: campaign performance, tracking diagnostics, GA4-based Google Ads cost/ROAS, and organic search performance and indexing.",
       "category": "Productivity",
       "source": {
         "source": "local",

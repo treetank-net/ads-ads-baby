@@ -8,7 +8,7 @@ Marketplace hub for ads management, marketing analytics, and reporting Claude Co
 |--------|----------|------|
 | **Google Ads Baby** | Google Ads | [treetank-net/google-ads-baby](https://github.com/treetank-net/google-ads-baby) |
 | **Meta Ads Baby** | Meta (Facebook) Ads | [treetank-net/meta-ads-baby](https://github.com/treetank-net/meta-ads-baby) |
-| **Google Analytics Baby** | Google Analytics 4 | [treetank-net/google-analytics-baby](https://github.com/treetank-net/google-analytics-baby) |
+| **Google Analytics Baby** | Google Analytics 4 + Search Console | [treetank-net/google-analytics-baby](https://github.com/treetank-net/google-analytics-baby) |
 | **Report Baby** | PDF/PNG reports | [treetank-net/report-baby](https://github.com/treetank-net/report-baby) |
 | **Marketing Context MCP** | Local marketing context | [treetank-net/marketing-context-mcp](https://github.com/treetank-net/marketing-context-mcp) |
 
@@ -16,7 +16,7 @@ Marketplace hub for ads management, marketing analytics, and reporting Claude Co
 
 This repo contains host-specific marketplace manifests and project-local configs that bundle the ads family for easy discovery and installation. Each plugin runs its own local MCP server.
 
-Google Ads Baby and Meta Ads Baby use a two-phase mutation safety flow (prepare -> user confirmation -> execute). Google Analytics Baby is read-only and adds GA4-based campaign performance, tracking diagnostics, and Google Ads cost/ROAS context. Report Baby turns HTML, URLs, or built-in report templates into client-facing PDF/PNG deliverables. Marketing Context MCP provides durable local marketing memory for client context, decisions, reviews, and reusable procedures.
+Google Ads Baby and Meta Ads Baby use a two-phase mutation safety flow (prepare -> user confirmation -> execute). Google Analytics Baby is read-only and adds GA4-based campaign performance, tracking diagnostics, Google Ads cost/ROAS context, and Google Search Console organic search data (queries, pages, URL indexing, sitemaps). Report Baby turns HTML, URLs, or built-in report templates into client-facing PDF/PNG deliverables. Marketing Context MCP provides durable local marketing memory for client context, decisions, reviews, and reusable procedures.
 
 Claude Code loads each upstream plugin with its native lifecycle hooks. Codex uses local wrappers from `plugins/` and the shared global hook configuration in `codex/hooks.json` for mutating ads plugins. Cursor uses project-local `.cursor/mcp.json` plus `.cursor/hooks.json`.
 
@@ -79,7 +79,7 @@ The MCP servers still enforce their final confirmation gate, but the workspace h
 | --- | --- | --- |
 | `report-baby` | No auth required | Local render tools. |
 | `marketing-context-mcp` | Optional `MARKETING_CONTEXT_DIR` | Defaults to `~/.marketing-context`. |
-| `google-analytics-baby` | Run `setup_google_auth` from the agent | Read-only GA4 OAuth; token is stored locally. |
+| `google-analytics-baby` | Run `setup_google_auth` from the agent | Read-only GA4 + Search Console OAuth; token is stored locally. Re-run after upgrading to Search Console support. |
 | `google-ads-baby` | Run `setup_google_auth`, then configure developer token and MCC/customer access | Separate from GA4 auth. |
 | `meta-ads-baby` | Run Meta auth setup from the agent | Meta has no sandbox; keep safety hooks enabled. |
 

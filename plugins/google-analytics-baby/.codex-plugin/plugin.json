@@ -1,7 +1,7 @@
 {
   "name": "google-analytics-baby",
   "version": "0.1.0",
-  "description": "Google Analytics 4 read-only marketing analytics for ads.",
+  "description": "Google Analytics 4 + Google Search Console read-only analytics.",
   "author": {
     "name": "treetank",
     "url": "https://treetank.net"
@@ -14,6 +14,8 @@
     "ga4",
     "mcp",
     "analytics",
+    "search-console",
+    "seo",
     "marketing",
     "ads",
     "read-only"
@@ -21,8 +23,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Google Analytics Baby",
-    "shortDescription": "Analyze ads performance with GA4 read-only data.",
-    "longDescription": "GA4 MCP server for listing properties, running reports, auditing campaign tracking, and pulling Google Ads cost/ROAS context from Analytics.",
+    "shortDescription": "Analyze ads and organic search with GA4 and Search Console read-only data.",
+    "longDescription": "GA4 MCP server for listing properties, running reports, auditing campaign tracking, and pulling Google Ads cost/ROAS context from Analytics, plus Google Search Console queries, landing pages, URL indexing and sitemaps.",
     "developerName": "treetank",
     "category": "Productivity",
     "capabilities": [
@@ -30,10 +32,11 @@
       "Read"
     ],
     "defaultPrompt": [
-      "Set up Google Analytics authentication.",
+      "Set up Google Analytics and Search Console authentication.",
       "List my GA4 properties.",
       "Show campaign performance for the selected GA4 property.",
-      "Audit campaign tracking quality for paid traffic."
+      "Audit campaign tracking quality for paid traffic.",
+      "Find Search Console queries ranking on positions 5-20."
     ],
     "brandColor": "#F9AB00"
   }
